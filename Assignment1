@@ -16,7 +16,7 @@ try:
         legal_data['earnhre'] = legal_data['earnwke'] / legal_data['uhours']
         
         # Save to CSV file
-        output_file = 'legal_occupations.csv'
+        output_file = 'legal_occupations_filtered.csv'
         legal_data.to_csv(output_file, index=False)
         print(f"Data successfully saved to {output_file}")
     else:
@@ -72,3 +72,75 @@ q3 = data['earnhre'].quantile(0.75)
 iqr = q3 - q1
 upper_bound = q3 + 1.5 * iqr
 data_filtered = data[data['earnhre'] <= upper_bound].copy()
+
+
+
+# Set target variable
+y = data_filtered['earnhre']
+
+# Define models with increasing complexity
+X1 = data_filtered[['female', 'age']]
+X2 = data_filtered[['female', 'age', 'educ_years']]
+X3 = data_filtered[['female', 'age', 'educ_years', 'exp', 'white', 'black']]
+X4 = data_filtered[['female', 'age', 'educ_years', 'exp', 'exp2', 'white', 'black', 'married']]
+
+# Function to evaluate models
+def evaluate_model(X, y, model_name):
+    # Add constant term
+    X_const = sm.add_constant(X)
+    
+    # Fit OLS model
+    model = sm.OLS(y, X_const).fit()
+    
+    # Print model summary
+    print(f"\n{model_name} Summary:")
+    print(model.summary())
+    
+    # Full sample RMSE
+    y_pred = model.predict(X_const)
+    rmse = sqrt(mean_squared_error(y, y_pred))
+    
+    # BIC
+    bic = model.bic
+    
+    # Cross-validation RMSE
+    kf = KFold(n_splits=5, shuffle=True, random_state=42)
+    cv_rmse_scores = []
+    
+    for train_idx, test_idx in kf.split(X):
+        X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
+        y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
+        
+        X_train_const = sm.add_constant(X_train)
+        model_cv = sm.OLS(y_train, X_train_const).fit()
+        
+        X_test_const = sm.add_constant(X_test)
+        y_pred_cv = model_cv.predict(X_test_const)
+        
+        rmse_cv = sqrt(mean_squared_error(y_test, y_pred_cv))
+        cv_rmse_scores.append(rmse_cv)
+    
+    cv_rmse = np.mean(cv_rmse_scores)
+    
+    return {
+        'Model': model_name,
+        'Variables': len(X.columns),
+        'RMSE': rmse,
+        'CV_RMSE': cv_rmse,
+        'BIC': bic,
+        'R-squared': model.rsquared
+    }
+
+# Evaluate all models
+model1_results = evaluate_model(X1, y, "Model 1")
+model2_results = evaluate_model(X2, y, "Model 2")
+model3_results = evaluate_model(X3, y, "Model 3")
+model4_results = evaluate_model(X4, y, "Model 4")
+
+# Collect results
+results_df = pd.DataFrame([
+    model1_results, model2_results, model3_results, model4_results
+])
+
+print("\nModel Comparison:")
+print(results_df)
