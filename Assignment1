@@ -1,24 +1,26 @@
-# Set up the project
-# Import necessary libraries
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import KFold
-import statsmodels.api as sm
-from math import sqrt
+import os
 
-# Load the dataset
-# Note: Update the file path to where your data is stored
-data = pd.read_csv('legal_occupations_filtered.csv')
-
-# Print basic information about the dataset
-print(f"Dataset shape: {data.shape}")
-print("\nFirst few rows:")
-print(data.head())
-
-# Check for missing values
-print("\nMissing values per column:")
-print(data.isnull().sum())
-
+try:
+    # Load the dataset
+    print("Loading dataset...")
+    data = pd.read_csv('morg-2014-emp.csv')
+    print(f"Dataset loaded successfully. Shape: {data.shape}")
+    
+    # Filter for legal occupations (codes 2100-2160)
+    legal_data = data[(data['occ2012'] >= 2100) & (data['occ2012'] <= 2160)]
+    print(f"Legal occupations data extracted: {legal_data.shape[0]} rows")
+    
+    if legal_data.shape[0] > 0:
+        # Calculate earnings per hour
+        legal_data['earnhre'] = legal_data['earnwke'] / legal_data['uhours']
+        
+        # Save to CSV file
+        output_file = 'legal_occupations.csv'
+        legal_data.to_csv(output_file, index=False)
+        print(f"Data successfully saved to {output_file}")
+    else:
+        print("No legal occupation data found with codes 2100-2160")
+        
+except Exception as e:
+    print(f"Error: {e}")
