@@ -144,3 +144,45 @@ results_df = pd.DataFrame([
 
 print("\nModel Comparison:")
 print(results_df)
+
+
+# Visualize model performance
+plt.figure(figsize=(15, 10))
+
+# Plot RMSE vs complexity
+plt.subplot(2, 2, 1)
+plt.plot(results_df['Variables'], results_df['RMSE'], marker='o', linestyle='-', color='blue')
+plt.xlabel('Number of Predictor Variables')
+plt.ylabel('RMSE')
+plt.title('Model Complexity vs RMSE')
+plt.grid(True)
+
+# Plot CV RMSE vs complexity
+plt.subplot(2, 2, 2)
+plt.plot(results_df['Variables'], results_df['CV_RMSE'], marker='o', linestyle='-', color='green')
+plt.xlabel('Number of Predictor Variables')
+plt.ylabel('Cross-Validated RMSE')
+plt.title('Model Complexity vs Cross-Validated RMSE')
+plt.grid(True)
+
+# Plot BIC vs complexity
+plt.subplot(2, 2, 3)
+plt.plot(results_df['Variables'], results_df['BIC'], marker='o', linestyle='-', color='red')
+plt.xlabel('Number of Predictor Variables')
+plt.ylabel('BIC')
+plt.title('Model Complexity vs BIC')
+plt.grid(True)
+
+# Plot R-squared vs complexity
+plt.subplot(2, 2, 4)
+plt.plot(results_df['Variables'], results_df['R-squared'], marker='o', linestyle='-', color='purple')
+plt.xlabel('Number of Predictor Variables')
+plt.ylabel('R-squared')
+plt.title('Model Complexity vs R-squared')
+plt.grid(True)
+
+plt.tight_layout()
+plt.savefig('model_performance.png')
+
+# Save results for report
+results_df.to_csv('model_results.csv', index=False)
