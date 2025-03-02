@@ -7,18 +7,10 @@ The raw data "merg-2014-emp is too big to upload here.
 
 I use the Claude AI to help me with the code.
 
-### Introduction to Assignment 1
-This study analyzes the determinants of hourly earnings in legal occupations using data from the CPS dataset. Four linear regression models with increasing complexity were constructed to predict hourly earnings (earnhre), calculated as weekly earnings divided by weekly hours worked.
-### Data and Methodology
-The analysis used a dataset of 1,743 individuals in legal occupations (occupational codes 2100-2160) after removing outliers. Four OLS regression models were developed with progressive complexity:
-Model 1 (Gender + Age): Includes only basic demographic factors.
-Rationale: Gender and age are fundamental demographic variables that typically influence earnings across occupations.
-
-Model 2 (+ Education): Adds education years to Model 1.
-Rationale: Education is particularly important in legal professions where advanced degrees are common and often required.
-
-Model 3 (+ Experience & Race): Adds work experience and race indicators to Model 2.
-Rationale: Experience captures career progression, while race variables account for potential demographic disparities.
-
-Model 4 (+ Marriage & Non-linear Effects): Further adds marital status, non-linear experience effects (exp²), and ethnicity.
-Rationale: The squared experience term captures diminishing returns to experience, while marital status may reflect social factors affecting earnings.
+### Introduction
+This study analyzes the determinants of hourly earnings in legal occupations (codes 2100-2160) using data from the CPS earnings dataset. Four ordinary least squares regression models with increasing complexity were developed to predict hourly earnings and evaluate the relationship between model complexity and predictive performance.
+### Model Design and Variable Selection
+Model 1 (Sex + Age): Includes fundamental demographic factors that typically influence earnings in professional settings.
+Model 2 (+ Education): Adds grade92 (education level) to capture the significant role of formal education in legal profession earnings.
+Model 3 (+ Race & Family): Incorporates race and marital status to account for potential demographic disparities and family structure effects.
+Model 4 (+ More Demographics): Further includes variables for children (ownchild and chldpres) to capture the impact of family responsibilities on earnings.
