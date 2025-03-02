@@ -1,4 +1,4 @@
 # DA3
-Prediction with Machine Learning
+Prediction with Machine Learning for Economists
 
-The place for assignment submission at CEU
+The repository is setup for assignment submission at CEU
